@@ -1,6 +1,7 @@
 package com.example.showbookstask.viewmodels
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.showbookstask.model.Book
@@ -10,6 +11,7 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(private val repository: BookRepository): ViewModel() {
 
+    private val bookData = MutableLiveData<List<Book>>()
     val books: LiveData<List<Book>>
     get() = repository.books
 
@@ -17,6 +19,15 @@ class MainViewModel(private val repository: BookRepository): ViewModel() {
         return repository.getSearchBooks(id)
 
     }
+
+    suspend fun deleteBook(book: Book) {
+        repository.deleteBook(book)
+    }
+
+    suspend fun updateBook(book: Book) {
+        repository.updateBook(book)
+    }
+
 
     fun getBooksDemo(): LiveData<List<Book>> {
         return repository.getBooksDemo()

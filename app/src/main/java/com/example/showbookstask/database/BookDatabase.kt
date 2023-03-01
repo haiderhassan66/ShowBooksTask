@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.showbookstask.model.Book
 
-@Database(entities = [Book::class], version = 3)
+@Database(entities = [Book::class], version = 4)
 abstract class BookDatabase : RoomDatabase() {
 
     abstract fun bookDAO() : BookDAO

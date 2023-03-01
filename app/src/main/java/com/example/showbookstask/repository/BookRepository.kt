@@ -4,10 +4,13 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.showbookstask.api.BookService
 import com.example.showbookstask.model.Book
 import com.example.showbookstask.database.BookDatabase
 import com.example.showbookstask.utils.NetworkUtil
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class BookRepository(private val bookDatabase: BookDatabase, private val bookService: BookService,private val context: Context) {
 
@@ -20,12 +23,21 @@ class BookRepository(private val bookDatabase: BookDatabase, private val bookSer
         return bookDatabase.bookDAO().getBooksDemo()
     }
 
+    suspend fun deleteBook(book: Book) {
+        return bookDatabase.bookDAO().deleteBook(book)
+    }
+
+
     suspend fun getSearchBooks(id: String?) : List<Book>{
         return bookDatabase.bookDAO().getSearchBooks(id)
     }
 
     suspend fun insertBook(book: Book){
         bookDatabase.bookDAO().insertBook(book)
+    }
+
+    suspend fun updateBook(book: Book) {
+        bookDatabase.bookDAO().updateBook(book)
     }
 
     suspend fun getBooksInfo(query: String) {
@@ -47,11 +59,9 @@ class BookRepository(private val bookDatabase: BookDatabase, private val bookSer
                     list.add(book)
                 }
                 bookLiveData.postValue(list)
-                Log.d("repository", list.toString())
             }
         } else {
             val allBooks = bookDatabase.bookDAO().getBooks()
-            Log.d("repository", "in else statement")
             bookLiveData.postValue(allBooks)
         }
     }
