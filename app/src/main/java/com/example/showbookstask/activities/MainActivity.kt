@@ -1,19 +1,13 @@
 package com.example.showbookstask.activities
 
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.Window
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,7 +21,6 @@ import com.example.showbookstask.repository.BookRepository
 import com.example.showbookstask.viewmodels.MainViewModel
 import com.example.showbookstask.viewmodels.MainViewModelFactory
 import com.example.showbookstask.database.BookDatabase
-import com.example.showbookstask.databinding.EditBookDialogBinding
 import com.example.showbookstask.model.Book
 import kotlinx.coroutines.*
 
@@ -106,7 +99,6 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
         }
     }
 
-    @SuppressLint("ResourceAsColor")
     override fun onItemClickListener(view: View, book: Book) {
         when(view.id){
             R.id.delete_img -> {
@@ -115,28 +107,39 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
                 }
             }
             R.id.edit_img -> {
-                var dialog = Dialog(this)
-                dialog.window?.requestFeature(Window.FEATURE_NO_TITLE)
-//                dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                dialog.setContentView(R.layout.edit_book_dialog)
-//                dialog.setCancelable(false)
-                val title = dialog.findViewById(R.id.bn) as TextView
-                val submit = dialog.findViewById<Button>(R.id.submit_btn)
-                val authorName = dialog.findViewById<EditText>(R.id.author_edt)
-                val description = dialog.findViewById<EditText>(R.id.desc_edt)
+
+                val dialog = android.app.AlertDialog.Builder(this).create()
+
+                val view = layoutInflater.inflate(R.layout.edit_book_dialog, null)
+
+                dialog.setView(view)
+
+                dialog.setCancelable(false)
+                val title = view.findViewById<TextView>(R.id.bn)
+                val submit = view.findViewById<Button>(R.id.submit_btn)
+                val cancel = view.findViewById<Button>(R.id.cancel_btn)
+                val authorName = view.findViewById<EditText>(R.id.author_edt)
+                val description = view.findViewById<EditText>(R.id.desc_edt)
                 title.text = book.title
 
-                dialog.show()
 
                 submit.setOnClickListener{
-                    book.authorName = authorName.text.toString()
-                    book.disc = description.text.toString()
-                    GlobalScope.launch {
-                        mainViewModel.updateBook(book)
-                    }
+                    if(authorName.text.isNotEmpty() && description.text.isNotEmpty()) {
+                        book.authorName = authorName.text.toString()
+                        book.disc = description.text.toString()
+                        GlobalScope.launch {
+                            mainViewModel.updateBook(book)
+                        }
+                        dialog.dismiss()
+                    } else
+                        Toast.makeText(this, "Author name & description can't be empty", Toast.LENGTH_SHORT).show()
+                }
 
+                cancel.setOnClickListener {
                     dialog.dismiss()
                 }
+
+                dialog.show()
             }
         }
     }

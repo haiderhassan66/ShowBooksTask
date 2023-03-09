@@ -102,7 +102,7 @@
                 android:background="@drawable/edit_txt_bg"
                 android:ems="10"
                 android:hint="Description"
-                android:inputType="textPersonName"
+                android:inputType="textMultiLine"
                 android:padding="5dp" />
 
         </LinearLayout>
