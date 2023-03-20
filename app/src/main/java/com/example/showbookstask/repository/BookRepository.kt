@@ -23,6 +23,11 @@ class BookRepository(private val bookDatabase: BookDatabase, private val bookSer
         return bookDatabase.bookDAO().getBooksDemo()
     }
 
+    suspend fun bookExist(name: String) : Boolean{
+        return bookDatabase.bookDAO().bookExist(name)
+    }
+
+
     suspend fun deleteBook(book: Book) {
         return bookDatabase.bookDAO().deleteBook(book)
     }

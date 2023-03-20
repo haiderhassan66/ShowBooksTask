@@ -2,6 +2,7 @@ package com.example.showbookstask.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -14,6 +15,8 @@ import com.example.showbookstask.database.BookDatabase
 import com.example.showbookstask.repository.BookRepository
 import com.example.showbookstask.viewmodels.AddBookViewFactory
 import com.example.showbookstask.viewmodels.AddBookViewModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class AddBookActivity : AppCompatActivity() {
 
@@ -42,9 +45,21 @@ class AddBookActivity : AppCompatActivity() {
         btn = findViewById(R.id.aBtn)
 
         btn.setOnClickListener {
-            val book = Book(title.text.toString(),authorName.text.toString(),desc.text.toString(),"")
-            addBookViewModel.insertBook(book)
-            Toast.makeText(this, "Book added", Toast.LENGTH_SHORT).show()
+            if(title.text.isNotEmpty()){
+                val isExist: Boolean = addBookViewModel.bookExist(title.text.toString())
+
+                if(isExist){
+                    Toast.makeText(this, "Change book name, it already exists", Toast.LENGTH_SHORT).show()
+                } else {
+                    val book = Book(title.text.toString(),authorName.text.toString(),desc.text.toString(),"")
+                    addBookViewModel.insertBook(book)
+                    Toast.makeText(this, "Book added", Toast.LENGTH_SHORT).show()
+                }
+
+            } else {
+                Toast.makeText(this, "Title can't be empty", Toast.LENGTH_SHORT).show()
+            }
+
         }
 
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)

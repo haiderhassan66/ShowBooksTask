@@ -25,7 +25,10 @@ class BookAdapter(private val listener: OnItemClickListener): ListAdapter<Book, 
         holder.bookTitle.text = item.title
         holder.bookAuthor.text = item.authorName
         holder.bookDesc.text = item.disc
-        Glide.with(holder.bookImage.context).load(item.image).placeholder(R.drawable.placeholder).into(holder.bookImage)
+        Glide.with(holder.bookImage.context)
+            .load(item.image)
+            .placeholder(R.drawable.placeholder)
+            .into(holder.bookImage)
 
         holder.delete.setOnClickListener{
             listener.onItemClickListener(holder.delete, item)
@@ -55,6 +58,7 @@ class BookAdapter(private val listener: OnItemClickListener): ListAdapter<Book, 
 //            bookDesc.text = book.disc
 //            Glide.with(bookImage.context).load(book.image).placeholder(R.drawable.placeholder).into(bookImage)
 //        }
+
 
     }
 

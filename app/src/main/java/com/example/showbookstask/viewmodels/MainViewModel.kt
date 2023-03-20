@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(private val repository: BookRepository): ViewModel() {
 
-    private val bookData = MutableLiveData<List<Book>>()
     val books: LiveData<List<Book>>
     get() = repository.books
 

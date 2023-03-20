@@ -24,4 +24,7 @@ interface BookDAO {
 
     @Query("SELECT * FROM books where title LIKE :id")
     suspend fun getSearchBooks(id: String?) : List<Book>
+
+    @Query("SELECT EXISTS(SELECT * FROM books where title = :name)")
+    suspend fun bookExist(name: String?) : Boolean
 }
